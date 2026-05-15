@@ -112,10 +112,11 @@ INSERT INTO DeliveryLogs (log_id, shipment_id, log_status, log_date) VALUES
 (52, 126, 'Picked', '2026-03-23'),
 (53, 126, 'In Transit', '2026-03-24');
 
+-- Write a query to find all shipments where the ActualDeliveryDate is greater than the PromisedDate.
 SELECT shipment_id, destination_city, promised_date, actual_delivery_date
 FROM Shipments
 WHERE actual_delivery_date > promised_date;
-
+-- Partner Performance
 SELECT 
     p.partner_name,
     COUNT(CASE WHEN s.status = 'Delivered' THEN 1 END) AS successful_deliveries,
@@ -123,13 +124,13 @@ SELECT
 FROM Partners p
 JOIN Shipments s ON p.partner_id = s.partner_id
 GROUP BY p.partner_name;
-
+-- Most Popular Destination City
 SELECT destination_city, COUNT(*) AS total_orders
 FROM Shipments
 WHERE promised_date >= CURDATE() - INTERVAL 30 DAY
 GROUP BY destination_city
 ORDER BY total_orders DESC;
-
+-- Partner Scorecard
 SELECT 
     p.partner_name,
     COUNT(*) AS total_shipments,
@@ -152,7 +153,7 @@ JOIN Shipments s ON p.partner_id = s.partner_id
 WHERE s.status = 'Delivered'
 GROUP BY p.partner_name
 ORDER BY success_rate DESC;
-
+-- Lost In Transit Detection
 SELECT 
     s.shipment_id, 
     s.destination_city, 
